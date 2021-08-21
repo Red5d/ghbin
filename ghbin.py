@@ -64,7 +64,11 @@ class Repo:
                 print(f"({assetNum})    {asset['name']} | {asset['content_type']} | {asset['browser_download_url']}")
                 assetNum += 1
 
+        if assetNum-1 == 0:
+            print("Unable to find a compatible download.")
+
         print()
+        return assetNum-1
 
 
 # Main program begin
@@ -188,7 +192,10 @@ if len(sys.argv) > 1:
         if sys.argv[2] in [x.split('/')[1] for x in config['repos']]:
             # Lookup the full repo path in the config, then print the release info
             r = Repo([x for x in config['repos'] if x.split('/')[1] == sys.argv[2]][0])
-            r.printLatest()
+            assetNum = r.printLatest()
+
+            if assetNum == 0:
+                sys.exit(1)
 
             # Ask the user which of the available assets to use for installation
             targetNum = input("Enter the number to the left of the file above that you want to install (leave blank to use the first one): ")
